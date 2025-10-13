@@ -16,6 +16,12 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  @include pad {
+    max-width: 90%;
+  }
+  @include mobile {
+    max-width: 90%;
+  }
 }
 
 img {
@@ -32,5 +38,55 @@ a {
   padding: 2px 10px;
   &:hover {
     opacity: 0.8;
+  }
+}
+nav.site-nav {
+  position: relative;
+}
+
+nav ul.nav_menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  @include mobile {
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -300px; /* 初始隱藏 */
+    width: 250px;
+    height: 100vh;
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.4s ease;
+    z-index: 100;
+    &.open {
+      right: 0;
+    }
+    li {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.mobile_menu {
+  display: none;
+  cursor: pointer;
+  @include mobile {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.btn {
+  display: none;
+  cursor: pointer;
+  border: none;
+  background-color: #fff;
+  @include mobile {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
   }
 }

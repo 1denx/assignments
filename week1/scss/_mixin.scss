@@ -1,11 +1,17 @@
+@mixin desktop {
+  @media (min-width: 1201px) and (max-width: 1920px) {
+    @content;
+  }
+}
+
 @mixin pad {
-  @media (max-width: 992px) {
+  @media (min-width: 601px) and (max-width: 1200px) {
     @content;
   }
 }
 
 @mixin mobile {
-  @media (max-width: 375px) {
+  @media (min-width: 361px) and (max-width: 600px) {
     @content;
   }
 }

@@ -17,14 +17,28 @@
 
 // GRID
 .grid-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-areas:
-    "promotion1 promotion1 promotion1 promotion1 promotion1 promotion1"
-    "promotion2 promotion2 promotion2 promotion2 promotion3 promotion3"
-    "title1 title1 title2 title3 title4 title5"
-    "title6 title6 title7 title8 title9 title10";
+  @include pad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+      "promotion1 promotion1 promotion2 promotion2"
+      "promotion3 promotion3 promotion3 promotion3"
+      "title1 title2 title3 title4"
+      "title5 title6 title7 title8"
+      "title9 title9 title10 title10";
+  }
+  @include desktop {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-areas:
+      "promotion1 promotion1 promotion1 promotion1 promotion1 promotion1"
+      "promotion2 promotion2 promotion2 promotion2 promotion3 promotion3"
+      "title1 title1 title2 title3 title4 title5"
+      "title6 title6 title7 title8 title9 title10";
+  }
 }
 .promotion1 {
   grid-area: promotion1;
