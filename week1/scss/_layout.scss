@@ -1,0 +1,128 @@
+@use "mixin" as *;
+
+// FLEX BOX
+.flex {
+  display: flex;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
+// GRID
+.grid-container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas:
+    "promotion1 promotion1 promotion1 promotion1 promotion1 promotion1"
+    "promotion2 promotion2 promotion2 promotion2 promotion3 promotion3"
+    "title1 title1 title2 title3 title4 title5"
+    "title6 title6 title7 title8 title9 title10";
+}
+.promotion1 {
+  grid-area: promotion1;
+}
+.promotion2 {
+  grid-area: promotion2;
+}
+.promotion3 {
+  grid-area: promotion3;
+}
+.title1 {
+  grid-area: title1;
+}
+.title2 {
+  grid-area: title2;
+}
+.title3 {
+  grid-area: title3;
+}
+.title4 {
+  grid-area: title4;
+}
+.title5 {
+  grid-area: title5;
+}
+.title6 {
+  grid-area: title6;
+}
+.title7 {
+  grid-area: title7;
+}
+.title8 {
+  grid-area: title8;
+}
+.title9 {
+  grid-area: title9;
+}
+.title10 {
+  grid-area: title10;
+}
+
+// POSITION & ABSOLUTE
+.relative {
+  position: relative;
+}
+.absolute-box {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 5px;
+}
+.absolute-star {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}
+// WIDTH
+.w-full {
+  width: 100%;
+}
+.w-80 {
+  width: 80px;
+}
+// HEIGHT
+.h-250 {
+  height: 250px;
+}
+
+// MARGIN
+.mt-20 {
+  margin-top: 20px;
+}
+
+// PADDING
+.p-10 {
+  padding: 10px;
+}
+.p-20 {
+  padding: 20px;
+}
+.pl-10 {
+  padding-left: 10px;
+}
+
+// BACKGROUND
+.bg-banner {
+  background-color: #ddeef8;
+}
+.bg-primary {
+  background-color: #ccdde8;
+}
+.bg-opacity {
+  background: rgba(255, 255, 255, 0.5);
+}
