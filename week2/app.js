@@ -155,7 +155,7 @@ function func2(ss, start, end, criteria) {
     for (let booking of bookings) {
       let bookedStart = booking[0];
       let bookedEnd = booking[1];
-      if (start < bookedEnd && end > bookedStart) {
+      if (startTime < bookedEnd && endTime > bookedStart) {
         return;
       }
     }
