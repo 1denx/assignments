@@ -96,16 +96,109 @@ func1("弗利沙"); // print 最遠辛巴，最近特南克斯
 func1("特南克斯"); // print 最遠丁滿，最近悟空
 
 console.log("========== TASK 2 ==========");
-
-// your code here, maybe
-function func2(ss, start, end, criteria) {
-  // your code here
-}
 const services = [
   { name: "S1", r: 4.5, c: 1000 },
   { name: "S2", r: 3, c: 1200 },
   { name: "S3", r: 3.8, c: 800 },
 ];
+// 儲存預約記錄
+let svcBookings = {};
+
+function func2(ss, start, end, criteria) {
+  // 初始設定預約列表為空
+  if (Object.keys(svcBookings).length === 0) {
+    for (const svc of ss) {
+      svcBookings[svc.name] = [];
+    }
+  }
+  // console.log(svcBookings);
+
+  // 分離參數 criteria 的欄位與值
+  let field, op, val;
+  if (criteria.includes(">=")) {
+    [field, val] = criteria.split(">=", 2);
+    op = ">=";
+  } else if (criteria.includes("<=")) {
+    [field, val] = criteria.split("<=", 2);
+    op = "<=";
+  } else if (criteria.includes("=")) {
+    [field, val] = criteria.split("=", 2);
+    op = "=";
+  } else return;
+
+  // 把值轉換成數字
+  const numVal = parseFloat(val);
+  if (!isNaN(numVal)) {
+    val = numVal;
+  }
+
+  // 找符合條件的服務
+  const matchSvc = ss.filter((svc) => {
+    if (field === "name") {
+      return op === "=" && svc.name === val;
+    } else {
+      if (!(field in svc) || typeof svc[field] !== "number") {
+        return false;
+      }
+      const svcVal = svc[field];
+      if (op === ">=") {
+        return svcVal >= val;
+      } else if (op === "<=") {
+        return svcVal <= val;
+      } else return false;
+    }
+  });
+
+  // 檢查某服務在時段是否可用
+  function isAvailable(svc, startTime, endTime) {
+    const bookings = svcBookings[svc.name] || [];
+    for (let booking of bookings) {
+      let bookedStart = booking[0];
+      let bookedEnd = booking[1];
+      if (start < bookedEnd && end > bookedStart) {
+        return;
+      }
+    }
+    return true;
+  }
+
+  // 篩選可用服務
+  const candidates = [];
+  for (let svc of matchSvc) {
+    if (!isAvailable(svc, start, end)) continue;
+    candidates.push(svc);
+  }
+  if (candidates.length === 0) {
+    console.log("Sorry");
+    return "Sorry";
+  }
+
+  // 找出最符合條件的並預約
+  let chosen = null;
+  if (op === "=") {
+    chosen = candidates[0];
+  } else if (op === ">=") {
+    let bestVal = Infinity;
+    for (let c of candidates) {
+      const filedVal = parseFloat(c[field]);
+      if (filedVal < bestVal) {
+        bestVal = filedVal;
+        chosen = c;
+      }
+    }
+  } else {
+    let bestVal = -Infinity;
+    for (let c of candidates) {
+      const filedVal = parseFloat(c[field]);
+      if (filedVal > bestVal) {
+        bestVal = filedVal;
+        chosen = c;
+      }
+    }
+  }
+  svcBookings[chosen.name].push([start, end]);
+  console.log(chosen.name);
+}
 func2(services, 15, 17, "c>=800"); // S3
 func2(services, 11, 13, "r<=4"); // S3
 func2(services, 10, 12, "name=S3"); // Sorry
@@ -116,14 +209,15 @@ func2(services, 8, 9, "c<=1500"); // S2
 
 console.log("========== TASK 3 ==========");
 function func3(index) {
-  // your code here
-  // 數列規律的變化: -2, -3, +1, +2
-  const group = Math.floor(index / 4);
-  const position = index % 4;
-  const groupStart = 25 - group * 2;
-  const changes = [0, -2, -5, -4];
-  const result = groupStart + changes[position];
-  console.log(result);
+  let val = 25;
+  const changes = [-2, -3, 1, 2];
+
+  for (let i = 0; i < index; i++) {
+    // i % 4 決定要從 changes 清單中選哪一個
+    val += changes[i % 4];
+  }
+  console.log(val);
+  return val;
 }
 func3(1); // print 23
 func3(5); // print 21
@@ -131,9 +225,27 @@ func3(10); // print 16
 func3(30); // print 6
 
 console.log("========== TASK 4 ==========");
-
 function func4(sp, stat, n) {
-  // your code here
+  // sp = 可用座位
+  // stat = 車廂狀態
+  // n = 乘客人數
+
+  let minDiff = Infinity; // 最小可用座位，初始化最小差異為無限大
+  let bestIndex = -1; // 最佳車廂(目前沒有)
+
+  for (let i = 0; i < sp.length; i++) {
+    // 判斷車廂能否進入
+    if (stat[i] === "0") {
+      // 判斷剩餘座位與人數差距
+      const extraSeats = Math.abs(sp[i] - n);
+      if (extraSeats < minDiff) {
+        minDiff = extraSeats;
+        bestIndex = i;
+      }
+    }
+  }
+  console.log(bestIndex);
+  return bestIndex;
 }
 func4([3, 1, 5, 4, 3, 2], "101000", 2); // print 5
 func4([1, 0, 5, 1, 3], "10100", 4); // print 4
