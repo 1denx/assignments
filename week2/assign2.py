@@ -107,10 +107,29 @@ def func2(ss, start, end, criteria):
     else:
         return None
 
-    # 把值轉換成數字
+    # 把值轉換成數字並把欄位跟值兩邊的空白去掉
+    field = field.strip()
+    val = val.strip()
     if field != "name":
         val = float(val)
     # print(f"field:{field} op:{op} val:{val}")
+
+    #  找符合條件的服務
+    def filterMatch(svc):
+        if field == "name":
+            return op == "=" and svc.get("name") == val
+        else:
+            svcVal = svc.get(field)
+            # 欄位不存在或不是數字，回傳 False
+            if svcVal is None or not isinstance(svcVal,(int,float)):
+                return False
+            if op == ">=":
+                return svcVal >= val
+            elif op == "<=":
+                return svcVal <= val
+            else:
+                return False
+    matchSvc = [svc for svc in ss if filterMatch(svc)]
 
     # 檢查某服務在時段是否可用
     def isAvailable(svc, startTime, endTime):
@@ -123,16 +142,10 @@ def func2(ss, start, end, criteria):
 
     # 篩選可用服務
     candidates = []
-    for svc in ss:
+    for svc in matchSvc:
         if not isAvailable(svc, start, end):
             continue
-        svcVal = svc[field] if field != "name" else svc["name"]
-        if op == "=" and str(svcVal) == val:
-            candidates.append(svc)
-        elif op == ">=" and field != "name" and svcVal >= val:
-            candidates.append(svc)
-        elif op == "<=" and field != "name" and svcVal >= val:
-            candidates.append(svc)
+        candidates.append(svc)
 
     if len(candidates) == 0:
         print("Sorry")
@@ -146,14 +159,14 @@ def func2(ss, start, end, criteria):
         bestVal = float('inf')
         for c in candidates:
             fieldVal = float(c[field])
-        if fieldVal < bestVal:
-            bestVal = fieldVal
-            chosen = c
+            if fieldVal < bestVal:
+                bestVal = fieldVal
+                chosen = c
     else:
         bestVal = -float('inf')
         for c in candidates:
             fieldVal = float(c[field])
-            if fieldVal < bestVal:
+            if fieldVal > bestVal:
                 bestVal = fieldVal
                 chosen = c
     if chosen is None:
@@ -176,6 +189,8 @@ func2(services, 15, 18, "r>=4.5")  # S1
 func2(services, 16, 18, "r>=4")    # Sorry
 func2(services, 13, 17, "name=S1") # Sorry
 func2(services, 8, 9, "c<=1500")   # S2
+func2(services, 8, 9, "c<=1500");  # S1
+
 print("===== TASK 3 =====")
 def func3(index):
     val = 25

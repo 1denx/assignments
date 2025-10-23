@@ -206,6 +206,7 @@ func2(services, 15, 18, "r>=4.5"); // S1
 func2(services, 16, 18, "r>=4"); // Sorry
 func2(services, 13, 17, "name=S1"); // Sorry
 func2(services, 8, 9, "c<=1500"); // S2
+func2(services, 8, 9, "c<=1500"); // S1
 
 console.log("========== TASK 3 ==========");
 function func3(index) {
