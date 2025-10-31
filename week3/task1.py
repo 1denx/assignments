@@ -53,7 +53,7 @@ hotel_info(hotel_list_ch, hotel_list_en)
 
 
 def sum_rooms_by_district(hotel_list_ch):
-    districts_rooms = {}
+    districts = {}
     for hotel in hotel_list_ch:
         address = hotel["地址"]
         rooms = hotel["房間數"]
@@ -63,17 +63,22 @@ def sum_rooms_by_district(hotel_list_ch):
             end = address.find("區", start)
             if end != -1:
                 district = address[start:end+1]
-                districts_rooms[district] = districts_rooms.get(district, 0) + int(rooms)
+
+                if district not in districts:
+                    districts[district] = {"hotel_count":0 ,"room_sum":0}
+                
+                districts[district]["hotel_count"] += 1
+                districts[district]["room_sum"] += int(rooms)
 
     with open("districts.csv", mode="w", encoding="utf-8", newline="") as csvfile:
         # 建立 csv 檔寫入
         writer = csv.writer(csvfile)
-        writer.writerow(["行政區","房間數"])
-        for district, rooms in districts_rooms.items():
-            writer.writerow([district,rooms])
+        writer.writerow(["行政區","旅館數","房間總數"])
+        for district, data in districts.items():
+            writer.writerow([district, data["hotel_count"], data["room_sum"]])
 
-    # print(districts_rooms)
-    return districts_rooms
+    print(districts)
+    return districts
 
 sum_rooms_by_district(hotel_list_ch)
 
