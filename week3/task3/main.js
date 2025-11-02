@@ -24,13 +24,14 @@ document.addEventListener("click", (e) => {
 // 存放 API 資料
 let spots = [];
 let pics = [];
-let currentIndex = 13; // 前 3+10 筆資料
+let currentIndex = 0;
 const infoUrl = "https://cwpeng.github.io/test/assignment-3-1";
 const imgUrl = "https://cwpeng.github.io/test/assignment-3-2";
 const picHostURL = "https://www.travel.taipei";
+let picMapGlobal = null;
 
 // Dom 完全加載後執行
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async () => {
   await initPage();
 });
 
@@ -38,80 +39,78 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function initPage() {
   // 加載資料
   try {
-    const spotsRes = await fetch(infoUrl);
-    if (!spotsRes.ok) {
+    const [spotsRes, picsRes] = await Promise.all([
+      fetch(infoUrl),
+      fetch(imgUrl),
+    ]);
+    if (!spotsRes.ok || !picsRes.ok) {
       throw new Error("Could not fetch resource");
     }
+
     const spotsData = await spotsRes.json();
-    // console.log("spotsAPI", spotsData);
-    spots = spotsData.rows;
-    console.log(spots);
-
-    const picsRes = await fetch(imgUrl);
-    if (!picsRes.ok) {
-      throw new Error("Could not fetch resource");
-    }
     const picsData = await picsRes.json();
-    // console.log("picsAPI", picsData);
-    pics = picsData.rows;
-    console.log(pics);
 
-    renderPage(pics, spots);
-    loadMore();
-    return [spots, pics];
+    spots = spotsData.rows || [];
+    pics = picsData.rows || [];
+    // console.log(spots, pics);
+
+    // 建立 picMap 工具
+    picMapGlobal = new Map(pics.map((p) => [p.serial, p]));
+
+    renderPage();
+    setupLoadMore();
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 }
 
-// 建立 picMap 工具
-function createPicMap(pics) {
-  return new Map(pics.map((p) => [p.serial, p]));
-}
-
 // 渲染畫面
-function renderPage(pics, spots) {
-  const promotion = document.querySelectorAll(".promotion");
-  const picMap = createPicMap(pics);
+function renderPage() {
+  const promotionEls = document.querySelectorAll(".promotion");
+  const promotionBox = document.querySelector(".promotion-box");
 
   // 渲染前 3 筆
-  const firstThreeSpots = spots.slice(0, 3);
-  firstThreeSpots.forEach((spot, i) => {
-    const el = promotion[i];
+  const firstThree = spots.slice(0, 3);
+  firstThree.forEach((spot, i) => {
+    const el = promotionEls[i];
     if (!el) {
       return;
     }
     // 找出景點對應的圖片資料
-    const pic = picMap.get(spot.serial);
+    const pic = picMapGlobal.get(spot.serial);
     if (!pic) {
       return;
     }
 
-    const firstImg = pic.pics?.split(".jpg").at(0) + ".jpg";
-    const img = el.querySelector("img");
+    let img = el.querySelector("img");
     if (!img) {
       img = document.createElement("img");
       el.appendChild(img);
     }
-    const p = el.querySelector("p");
+    let p = el.querySelector("p");
     if (!p) {
       p = document.createElement("p");
       el.appendChild(p);
     }
+    const firstImg = pic.pics?.split(".jpg").at(0) + ".jpg";
     img.src = picHostURL + firstImg;
     img.alt = spot.sname;
     p.textContent = spot.sname;
   });
 
-  // 渲染後 10 筆
+  // 初始 grid-box 與 10 個 grid-item（若無則建立）
   let gridBox = document.querySelector(".grid-box");
   if (!gridBox) {
     gridBox = document.createElement("div");
     gridBox.classList.add("grid-box");
-    const promotionBox = document.querySelector(".promotion-box");
-    promotionBox?.after(gridBox);
+    // 插在 promotion-box 之後（若 promotion-box 有存在）
+    if (promotionBox) {
+      promotionBox.after(gridBox);
+    } else {
+      document.querySelector(".grid-container")?.appendChild(gridBox);
+    }
   }
-  const nextSpots = spots.slice(3, 13);
+  const nextSpots = spots.slice(3, 13); // 初始 10 筆
   // 檢查現有 .grid-item 數量，若不足就補齊（並給 title1..title10）
   const existingItems = gridBox.querySelectorAll(".grid-item");
   if (existingItems.length < nextSpots.length) {
@@ -125,10 +124,10 @@ function renderPage(pics, spots) {
     }
   }
   // 取得或新增後的 grid-item nodeList，並填入內容
-  const gridItemEls = gridBox.querySelectorAll(".grid-item");
+  const gridItems = gridBox.querySelectorAll(".grid-item");
   nextSpots.forEach((spot, i) => {
-    const el = gridItemEls[i];
-    const pic = picMap.get(spot.serial);
+    const el = gridItems[i];
+    const pic = picMapGlobal.get(spot.serial);
     if (!el || !pic) {
       return;
     }
@@ -153,36 +152,42 @@ function renderPage(pics, spots) {
     absBox.classList.add("absolute-box", "bg-opacity", "w-full");
     const title = document.createElement("p");
     title.textContent = spot.sname;
-    absBox.appendChild(title);
 
+    absBox.appendChild(title);
     el.append(img, star, absBox);
   });
 
+  // 設定 currentIndex 為已使用的筆數
   currentIndex = 3 + nextSpots.length;
 }
 
 // 顯示更多
-function loadMore() {
+function setupLoadMore() {
   const moreBtn = document.querySelector(".more_btn");
   const gridContainer = document.querySelector(".grid-container");
-  const picMap = createPicMap(pics);
 
-  moreBtn.addEventListener("click", () => {
+  if (!moreBtn || !gridContainer) return;
+
+  moreBtn.addEventListener("click", async () => {
+    // disable 按鈕避免重複點擊
+    moreBtn.disabled = true;
+    const oldText = moreBtn.textContent;
+    moreBtn.textContent = "載入中";
+
     const nextBatch = spots.slice(currentIndex, currentIndex + 10);
     if (nextBatch.length === 0) {
       moreBtn.textContent = "資料已到底";
-      moreBtn.disabled = true;
       return;
     }
 
     const newGridBox = document.createElement("div");
     newGridBox.classList.add("grid-box");
+    const frag = document.createDocumentFragment();
 
-    nextBatch.forEach((spot, i) => {
-      const pic = picMap.get(spot.serial);
-      if (!pic) {
-        return;
-      }
+    for (let i = 0; i < nextBatch.length; i++) {
+      const spot = nextBatch[i];
+      const pic = picMapGlobal.get(spot.serial);
+      if (!pic) continue;
 
       const globalIdx = currentIndex + i;
       const titleIdx = (((globalIdx - 3) % 10) + 10) % 10;
@@ -212,18 +217,40 @@ function loadMore() {
 
       absBox.appendChild(title);
       card.append(img, star, absBox);
-      newGridBox.appendChild(card);
-    });
+      frag.appendChild(card);
+    }
+    newGridBox.appendChild(frag);
+
+    // 一開始隱藏新 box
+    newGridBox.style.opacity = "0";
+    newGridBox.style.transform = "translateY(30px)";
+
+    // 將 newGridBox 插到最後一個 .grid-box 之後
     const allGridBoxes = gridContainer.querySelectorAll(".grid-box");
-    const promotionBox = gridContainer.querySelector(".promotion-box");
-    if (allGridBoxes.length === 0) {
-      promotionBox
-        ? promotionBox.after.after(newGridBox)
-        : gridContainer.appendChild(newGridBox);
-    } else {
+    if (allGridBoxes.length > 0) {
       const last = allGridBoxes[allGridBoxes.length - 1];
       last.after(newGridBox);
+    } else {
+      gridContainer.appendChild(newGridBox);
     }
+
+    // 延遲觸發動畫
+    requestAnimationFrame(() => {
+      newGridBox.style.transition = "all 0.6s ease";
+      newGridBox.style.opacity = "1";
+      newGridBox.style.transform = "translateY(0)";
+    });
+
     currentIndex += nextBatch.length;
+
+    // restore button
+    moreBtn.disabled = false;
+    moreBtn.textContent = oldText;
+
+    // 若已到底，禁用並提示
+    if (currentIndex >= spots.length) {
+      moreBtn.textContent = "資料已到底";
+      moreBtn.disabled = true;
+    }
   });
 }
