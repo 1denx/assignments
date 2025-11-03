@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOME PAGE</title>
+    <link rel="stylesheet" href="../static/all.css" />
+  </head>
+  <body>
+    <header>
+      <h1>歡迎光臨，請輸入信箱密碼</h1>
+    </header>
+    <main class="container flex">
+      <div class="mb-50">
+        <h2>登入系統</h2>
+        <form action="#" class="flex">
+          <label for="email">
+            信箱
+            <input class="m-5" type="email" id="email" name="email" />
+          </label>
+          <label for="password">
+            密碼
+            <input type="password" id="password" name="password" />
+          </label>
+          <label for="agree">
+            同意條款
+            <input type="checkbox" id="agree" name="agree" />
+          </label>
+          <button type="button" class="btn">登入</button>
+        </form>
+      </div>
+      <div class="line"></div>
+      <div class="mt-50">
+        <h2>取得旅館資訊</h2>
+        <form action="#" class="flex">
+          <label for="hotel-id">
+            編號
+            <input type="text" id="hotel-id" name="hotel-id" />
+          </label>
+          <button type="button" class="btn">取得</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
+<script src="../static/main.js"></script>
