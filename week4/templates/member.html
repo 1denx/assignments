@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HOME PAGE</title>
-    <link rel="stylesheet" href="../static/all.css" />
-  </head>
-  <body>
-    <header>
-      <h1>歡迎光臨，這是會員頁</h1>
-    </header>
-    <main class="container flex">
-      <h2>恭喜您，成功登入系統</h2>
-      <button type="button" class="btn">登出系統</button>
-    </main>
-  </body>
-</html>
-<script src="../static/main.js"></script>
+{% extends "base.html" %} {% block title %} MEMBER PAGE {% endblock %} {% block
+content %}
+
+<header>
+  <h1>歡迎光臨，這是會員頁</h1>
+</header>
+<main class="container flex">
+  <h2>{{message}}</h2>
+  <a href="/logout">登出系統</a>
+</main>
+
+{% endblock %}

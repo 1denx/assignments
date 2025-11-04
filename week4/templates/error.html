@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HOME PAGE</title>
-    <link rel="stylesheet" href="../static/all.css" />
-  </head>
-  <body>
-    <header>
-      <h1>失敗頁面</h1>
-    </header>
-    <main class="container flex">
-      <h2>ERROR</h2>
-    </main>
-  </body>
-</html>
-<script src="../static/main.js"></script>
+{% extends "base.html" %} {% block title %} ERROR PAGE {% endblock %} {% block
+content %}
+
+<header>
+  <h1>失敗頁面</h1>
+</header>
+<main class="container flex">
+  {% if msg == "請輸入信箱和密碼" %}
+  <h2>{{msg}}</h2>
+  {% elif msg == "信箱或密碼輸入錯誤" %}
+  <h2>{{msg}}</h2>
+  {% else %}
+  <h2>{{msg}}</h2>
+  {% endif %}
+  <button type="button" class="btn" onclick="window.location.href='/';">
+    返回首頁
+  </button>
+</main>
+
+{% endblock %}

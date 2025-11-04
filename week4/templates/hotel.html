@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %} HOTEL INFO {% endblock %} {% block
+content %}
+
+<header>
+  <h1>旅館的資訊</h1>
+</header>
+<main class="container flex">
+  {% if hotel %}
+  <h2>
+    {{ hotel["旅宿中文名稱"] }}、{{ hotel["旅宿英文名稱"] }}、{{ hotel["電話"]
+    }}
+  </h2>
+  {% else %}
+  <h2>查詢不到相關資料</h2>
+  {% endif %}
+  <button type="button" class="btn" onclick="window.location.href='/';">
+    返回首頁
+  </button>
+</main>
+
+{% endblock %}

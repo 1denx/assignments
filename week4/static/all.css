@@ -54,13 +54,17 @@ img {
 }
 
 a {
-    display: block;
+    display: inline-block;
     text-align: center;
     text-decoration: none;
+    border-radius: 5px;
+    background-color: #000;
     color: #fff;
+    padding: 8px 20px;
 }
 a:hover {
-    opacity: 0.8;
+    background-color: #f0f0f0;
+    color: #000;
 }
 
 .container {
