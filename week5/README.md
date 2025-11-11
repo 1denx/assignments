@@ -1,8 +1,5 @@
 # Week 5 Assignment
 
-## Task 1: Install MySQL server
-![INSTALL SCREENSHOT](assets/1.install.png)
-
 ## Task 2: Create database and table in your MySQL server
 ### Create a new database named website .
 ```
