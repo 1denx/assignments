@@ -51,11 +51,13 @@ ORDER BY time DESC;
 ![SELECT ORDER](assets/3.3_select_desc.png)
 
 ### SELECT total 3 rows, second to fourth, from the member table, in descending order of time. Note: it does not mean SELECT rows where id are 2, 3, or 4.
+- 跳過第 1 筆（offset 1），再取出接下來的 3 筆（共第 2～4 筆）
 ```
 SELECT * FROM member
-LIMIT 2,4;
+ORDER BY time DESC
+LIMIT 3 OFFSET 1;
 ```
-![SELECT LIMIT](assets/3.4_select_limit.png)
+![SELECT LIMIT](assets/3.4_select_limit_offset.png)
 
 ### SELECT rows where email equals to test@test.com .
 ```
