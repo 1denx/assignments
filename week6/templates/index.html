@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %} HOME PAGE {% endblock %} {% block
+content %}
+
+<header>
+  <h1>歡迎光臨，請註冊登入系統</h1>
+</header>
+<main class="container flex">
+  <div class="mb-50">
+    <h2>註冊帳號</h2>
+    <form action="/login" class="flex" method="post">
+      <label for="name">
+        姓名
+        <input class="m-5" type="name" id="name" name="name" />
+      </label>
+      <label for="email">
+        信箱
+        <input class="m-5" type="email" id="email" name="email" />
+      </label>
+      <label for="password">
+        密碼
+        <input type="password" id="password" name="password" />
+      </label>
+      <button type="submit" class="btn">登入</button>
+    </form>
+  </div>
+  <div class="line"></div>
+  <div class="mt-50">
+    <h2>登入系統</h2>
+    <form action="/login" class="flex" method="post">
+      <label for="email">
+        信箱
+        <input class="m-5" type="email" id="email" name="email" />
+      </label>
+      <label for="password">
+        密碼
+        <input type="password" id="password" name="password" />
+      </label>
+      <button type="submit" class="btn">登入</button>
+    </form>
+  </div>
+</main>
+
+{% endblock %}
