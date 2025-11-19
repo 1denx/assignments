@@ -7,34 +7,36 @@ content %}
 <main class="container flex">
   <div class="mb-50">
     <h2>註冊帳號</h2>
-    <form action="/signup" class="flex" method="post">
-      <label for="name">
-        姓名
-        <input class="m-5" type="text" id="name" name="name" />
-      </label>
-      <label for="email">
-        信箱
-        <input class="m-5" type="email" id="email" name="email" />
-      </label>
-      <label for="password">
-        密碼
-        <input type="password" id="password" name="password" />
-      </label>
-      <button type="submit" class="btn">登入</button>
+    <form action="/signup" id="signup_form" class="flex" method="post">
+      <div class="form-group">
+        <label for="name"> 姓名 </label>
+        <input class="m-5" type="text" id="signup_name" name="name" />
+      </div>
+      <div class="form-group">
+        <label for="email"> 信箱 </label>
+        <input class="m-5" type="email" id="signup_email" name="email" />
+      </div>
+      <div class="form-group">
+        <label for="password"> 密碼 </label>
+        <input type="password" id="signup_pwd" name="password" />
+      </div>
+
+      <button type="submit" class="btn">註冊</button>
     </form>
   </div>
   <div class="line"></div>
   <div class="mt-50">
     <h2>登入系統</h2>
-    <form action="/login" class="flex" method="post">
-      <label for="email">
-        信箱
-        <input class="m-5" type="email" id="email" name="email" />
-      </label>
-      <label for="password">
-        密碼
-        <input type="password" id="password" name="password" />
-      </label>
+    <form action="/login" id="login_form" class="flex" method="post">
+      <div class="form-group">
+        <label for="email"> 信箱 </label>
+        <input class="m-5" type="email" id="login_email" name="email" />
+      </div>
+      <div class="form-group">
+        <label for="password"> 密碼 </label>
+        <input type="password" id="login_pwd" name="password" />
+      </div>
+
       <button type="submit" class="btn">登入</button>
     </form>
   </div>

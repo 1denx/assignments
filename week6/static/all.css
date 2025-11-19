@@ -147,3 +147,14 @@ h2{
     background-color: #f0f0f0;
     color: #000;
 }
+
+.form-group .error {
+  border: 1px solid red;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}
