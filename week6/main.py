@@ -3,7 +3,7 @@ import json
 import urllib.request as req
 import mysql.connector
 from dotenv import load_dotenv, find_dotenv
-from fastapi import FastAPI, Form, Request, Depends
+from fastapi import FastAPI, Form, Request, Depends, Body
 from typing import Annotated 
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -44,9 +44,24 @@ def get_db_connector():
         if con:
             con.close()
 
+def get_user_info(con, cursor):
+    query = """
+    SELECT 
+        message.id AS message_id, 
+        member.id AS member_id,
+        member.name AS name,
+        message.content AS content
+    FROM message
+    INNER JOIN member 
+        ON message.member_id = member.id
+    ORDER BY message.id ASC;
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 @app.get("/")
 async def home(request: Request):
-    if request.session.get("SIGNIN"):
+    if request.session.get("user_id"):
         return RedirectResponse(url="/member", status_code=303)
     return templates.TemplateResponse("index.html", {"request": request})
 
@@ -87,7 +102,7 @@ async def login(
     if not email or not password:
         return RedirectResponse(url="/ohoh?msg=請輸入信箱或密碼", status_code=303)
 
-    query = "SELECT id, password FROM member WHERE email =%s;"
+    query = "SELECT id, name, password FROM member WHERE email =%s;"
     cursor.execute(query,(email,))
     user = cursor.fetchone()
     
@@ -96,6 +111,7 @@ async def login(
     else:
         if user["password"] == password:
             request.session["user_id"] = user["id"]
+            request.session["name"] = user["name"]
             return RedirectResponse(url="/member", status_code=303)
         else:
             return RedirectResponse(url="ohoh?msg=電子郵件或密碼錯誤", status_code=303)
@@ -107,18 +123,74 @@ async def logout(request: Request):
 
 @app.get("/member")
 async def member(request: Request, db = Depends(get_db_connector)):
+    con, cursor = db
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/ohoh?msg=請先登入", status_code=303)
+    
+    messages = get_user_info(con, cursor)
+
     return templates.TemplateResponse("member.html", {
         "request": request,
-        "message": "恭喜你，成功登入系統"
+        "username": request.session.get("name"),
+        "messages": messages
         })
 
 @app.get("/ohoh")
 async def error(request: Request, msg: str ="帳號或密碼輸入錯誤"):
     return templates.TemplateResponse("error.html", {"request": request,"msg": msg})
 
+@app.post("/createMessage")
+async def create_message(
+    request: Request,
+    content: Annotated[str, Form()],
+    db = Depends(get_db_connector),
+):
+    con, cursor = db
+
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/ohoh?msg=請先登入", status_code=303)
+
+    content = content.strip()
+    messages = get_user_info(con, cursor)
+    if not content:
+        return templates.TemplateResponse("member.html",{
+            "request": request,
+            "error_msg": "請輸入留言內容",
+            "username": request.session.get("name"),
+            "messages": messages
+        })
+
+    insert_query = "INSERT INTO message (member_id, content) VALUES (%s, %s);"
+    cursor.execute(insert_query,(user_id, content))
+    con.commit()
+    return RedirectResponse(url="/member", status_code=303)
+
+@app.post("/deleteMessage")
+async def deleteMessage(
+    request: Request,
+    data: dict = Body(...),
+    db = Depends(get_db_connector)
+):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return {"success": False, "msg": "未登入"}
+    
+    message_id = data.get("message_id")
+    con, cursor = db
+
+    del_query = """
+        DELETE FROM message
+        WHERE id = %s AND member_id = %s
+    """
+    cursor.execute(del_query, (message_id, user_id))
+    con.commit()
+
+    if cursor.rowcount == 0:
+        return {"success": False, "msg": "無權刪除此留言"}
+    
+    return {"success": True}
 
 
 

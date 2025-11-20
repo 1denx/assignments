@@ -1,27 +1,39 @@
 {% extends "base.html" %} {% block title %} MEMBER PAGE {% endblock %} {% block
 content %}
 
-<header>
+<header class="mb-50">
   <h1>歡迎光臨，這是會員頁</h1>
 </header>
-<main class="container flex">
+<main class="auto-layout flex">
   <div class="flex mb-50">
-    <h2>{{message}}</h2>
+    <h2>{{username}}，歡迎登入系統</h2>
     <a href="/logout">登出系統</a>
   </div>
   <div class="line"></div>
   <div class="mt-50 mb-50">
     <h2>快來留言吧</h2>
-    <form action="" method="post" class="msg-flex">
-      <label for="message">
+    <form action="/createMessage" method="post" class="msg-flex" id="form_msg">
+      <label for="content">
         內容
-        <input class="m-5" type="message" id="message" name="message" />
+        <input class="m-5" type="text" id="content" name="content" />
       </label>
       <button type="submit" class="btn-sm">送出</button>
     </form>
+    {% if error_msg %}
+    <p class="error-text">{{ error_msg }}</p>
+    {% endif %}
   </div>
   <div class="line"></div>
-  <div class="mt-50"></div>
+  <div class="mt-50 mb-50">
+    {% for msg in messages %}
+    <div class="list-flex mb-5">
+      <p><span class="font-bold">{{ msg.name }}：</span> {{ msg.content }}</p>
+      <button type="button" class="btn-del" data-id="{{ msg.message_id }}">
+        刪除
+      </button>
+    </div>
+    {% endfor %}
+  </div>
 </main>
 
 {% endblock %}

@@ -1,5 +1,16 @@
-const signupForm = document.querySelector("#signup_form");
-const loginForm = document.querySelector("#login_form");
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+
+  if (path === "/") {
+    initSignup();
+    initLogin();
+  }
+
+  if (path === "/member") {
+    initCreateMsg();
+    initDelMsg();
+  }
+});
 
 const showError = (field, errorText) => {
   field.classList.add("error");
@@ -43,9 +54,9 @@ const handleSignup = (e) => {
   }
   const errorInputs = document.querySelectorAll(".error");
   if (errorInputs.length > 0) return;
-  signupForm.submit();
-};
 
+  e.target.submit();
+};
 const handleLogin = (e) => {
   e.preventDefault();
   clearErrors();
@@ -65,8 +76,61 @@ const handleLogin = (e) => {
   const errorInputs = document.querySelectorAll(".error");
   if (errorInputs.length > 0) return;
 
-  loginForm.submit();
+  e.target.submit();
 };
 
-signupForm.addEventListener("submit", handleSignup);
-loginForm.addEventListener("submit", handleLogin);
+// signup
+function initSignup() {
+  const form = document.querySelector("#signup_form");
+  if (!form) return;
+
+  form.addEventListener("submit", handleSignup);
+}
+// login
+function initLogin() {
+  const form = document.querySelector("#login_form");
+  if (!form) return;
+
+  form.addEventListener("submit", handleLogin);
+}
+
+// createMessage
+function initCreateMsg() {
+  const formMsg = document.querySelector("#form_msg");
+  if (!formMsg) return;
+
+  formMsg.addEventListener("submit", function (e) {
+    const content = document.querySelector("#content").value.trim();
+    if (!content) {
+      e.preventDefault();
+      alert("請輸入留言");
+    }
+  });
+}
+
+// deleteMessage
+function initDelMsg() {
+  const delBtn = document.querySelectorAll(".btn-del");
+
+  delBtn.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+
+      if (!confirm("確定要刪除這則留言嗎？")) return;
+
+      const res = await fetch("/deleteMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message_id: id }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        btn.parentElement.remove();
+      } else {
+        alert("刪除失敗：" + data.msg);
+      }
+    });
+  });
+}
