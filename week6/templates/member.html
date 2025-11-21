@@ -28,9 +28,11 @@ content %}
     {% for msg in messages %}
     <div class="list-flex mb-5">
       <p><span class="font-bold">{{ msg.name }}：</span> {{ msg.content }}</p>
+      {% if msg.member_id == request.session['user_id'] %}
       <button type="button" class="btn-del" data-id="{{ msg.message_id }}">
         刪除
       </button>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
