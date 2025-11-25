@@ -1,0 +1,246 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+  background-color: #fff;
+}
+body.homepage {
+  background-color: #f5f5f5; /* 首頁灰色 */
+}
+
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+  --red-color: #c70036;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+a {
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    padding: 8px 20px;
+}
+a:hover {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.line{
+    width: 100%;
+    border: 1px solid #f0f0f0;
+}
+
+header{
+  background-color: #000;
+  color: #fff;
+}
+
+.center-layout {
+  max-width: 100%;
+  height:100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.auto-layout {
+  min-height: calc(100vh - 120px); /* 保底高度 */
+  padding-top: 20px;
+}
+
+h1{
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    padding: 40px 0;
+}
+
+h2{
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+input{
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.full{
+  width: 100%;
+}
+
+.mt-20{
+  margin-top: 20px;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.mb-5{
+    margin-bottom: 5px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+
+.wrap{
+  min-height: 350px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 50px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.form-flex{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.form-flex button{
+  margin-top: auto;
+}
+
+.msg-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.list-flex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.flex .btn{
+  margin-top: auto;
+}
+
+.btn{
+    border: none;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    padding: 8px 20px;
+    cursor: pointer;
+}
+.btn:hover{
+    background-color: #f0f0f0;
+    color: #000;
+}
+.btn-sm{
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    padding: 2px 10px;
+    cursor: pointer;
+}
+.btn-sm:hover{
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.btn-del{
+    font-size: 14px;
+    border: 1px solid var(--red-color);
+    background-color: #fff;
+    color: var(--red-color);
+    border-radius: 5px;
+    padding: 2px 10px;
+    cursor: pointer;
+}
+
+.btn-del:hover{
+    background: var(--red-color);
+    color: #fff;
+}
+
+.form-group .error {
+  border: 1px solid var(--red-color);
+}
+
+.error-text {
+  color: var(--red-color);
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}

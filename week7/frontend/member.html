@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/frontend/css/all.css" />
+    <title>會員頁面</title>
+  </head>
+  <body>
+    <header class="mb-30">
+      <h1>歡迎光臨，這是會員頁</h1>
+    </header>
+    <main class="auto-layout flex">
+      <div class="flex">
+        <h2>，歡迎登入系統</h2>
+        <a href="/logout" class="mt-20">登出系統</a>
+      </div>
+      <div class="line mt-30"></div>
+      <div class="mt-30">
+        <h2>查詢會員姓名</h2>
+        <form action="" method="post" class="msg-flex mt-20" id="form_msg">
+          <label for="content"></label>
+          <input
+            class="m-5"
+            type="text"
+            id="content"
+            name="content"
+            placeholder="請輸入會員姓名"
+          />
+
+          <button type="submit" class="btn-sm">查詢</button>
+        </form>
+      </div>
+      <div class="mt-30">
+        <h2>更新我的姓名</h2>
+        <form action="" method="post" class="msg-flex mt-20" id="form_msg">
+          <label for="content"></label>
+          <input
+            class="m-5"
+            type="text"
+            id="content"
+            name="content"
+            placeholder="請輸入新的名稱"
+          />
+
+          <button type="submit" class="btn-sm">更新</button>
+        </form>
+      </div>
+      <div class="mt-30 flex-row">
+        <h2>誰查詢了我</h2>
+        <button type="button" class="btn-sm">更新</button>
+      </div>
+    </main>
+    <script src="/frontend/js/main.js"></script>
+  </body>
+</html>
