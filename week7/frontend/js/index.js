@@ -1,5 +1,10 @@
 const API = "http://127.0.0.1:8000";
 
+const username = localStorage.getItem("name");
+if (username) {
+  location.href = "member.html";
+}
+
 // 註冊
 const signupForm = document.querySelector("#signup_form");
 if (signupForm) {
@@ -41,16 +46,5 @@ if (loginForm) {
     } else {
       alert(data.msg);
     }
-  });
-}
-// 登出
-const logoutBtn = document.querySelector("#logout_btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    // 清除登入資訊
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("name");
-
-    location.href = "index.html";
   });
 }
