@@ -38,6 +38,7 @@ if (searchForm) {
     resultEl.innerHTML = "";
 
     const memberId = Number(idField.value.trim());
+    const myId = localStorage.getItem("member_id");
 
     if (!memberId || memberId <= 0) {
       showError(idField, "請輸入有效的會員 ID");
@@ -45,7 +46,7 @@ if (searchForm) {
     }
 
     try {
-      const res = await fetch(`${API}/api/member/${memberId}`);
+      const res = await fetch(`${API}/api/member/${memberId}?from=${myId}`);
       const data = await res.json();
 
       if (!data.success) {
@@ -110,6 +111,36 @@ if (updateForm) {
     } catch (err) {
       showError(nameField, "更新失敗");
       console.error(err);
+    }
+  });
+}
+
+// 查詢紀錄
+const queryLogBtn = document.querySelector("#query_log_btn");
+const logList = document.querySelector("#query_log_list");
+
+if (queryLogBtn) {
+  queryLogBtn.addEventListener("click", async () => {
+    const myId = localStorage.getItem("member_id");
+
+    if (!myId) return;
+
+    try {
+      const res = await fetch(`${API}/api/query_log/${myId}`);
+      const data = await res.json();
+
+      if (!data.success || data.data.length === 0) {
+        logList.innerHTML = "<li>目前沒有任何查詢紀錄</li>";
+        return;
+      }
+
+      logList.innerHTML = data.data
+        .map(
+          (record) => `<li>${record.searcher_name} (${record.create_time})</li>`
+        )
+        .join("");
+    } catch (err) {
+      logList.innerHTML = `<li>查詢失敗</li>`;
     }
   });
 }

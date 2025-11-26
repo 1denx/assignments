@@ -1,7 +1,7 @@
 import os
 import mysql.connector
 from dotenv import load_dotenv, find_dotenv
-from fastapi import FastAPI, Form, Depends, Body
+from fastapi import FastAPI, Form, Depends, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 # 載入 .env 變數
@@ -82,10 +82,12 @@ def login(
 
 @app.get("/api/member/{member_id}")
 def get_member_info(
+    request: Request,
     member_id: int,
     db = Depends(get_db)
 ):
     con, cursor = db
+    searcher_id = request.query_params.get("from")
 
     query = "SELECT id, name, email FROM member WHERE id = %s;"
     cursor.execute(query, (member_id,))
@@ -93,6 +95,14 @@ def get_member_info(
 
     if not user:
         return {"success": False, "msg": "無資料"}
+
+    if searcher_id and int(searcher_id) != member_id:
+        insert_query = """
+            INSERT INTO query_log (target_id, searcher_id)
+            VALUES (%s, %s)
+        """
+        cursor.execute(insert_query, (member_id, searcher_id))
+        con.commit()
     
     return {
         "success": True,
@@ -123,3 +133,36 @@ def update_username(
         return {"success": False, "msg": "更新失敗"}
     
     return {"success": True, "msg": "更新成功"}
+
+@app.get("/api/query_log/{member_id}")
+def get_query_log(
+    member_id: int,
+    db = Depends(get_db)
+):
+    con, cursor = db
+    query = """
+        SELECT
+            query_log.searcher_id,
+            member.name AS searcher_name,
+            query_log.created_at
+        FROM query_log
+        INNER JOIN member ON query_log.searcher_id = member.id
+        WHERE query_log.target_id = %s
+        ORDER BY query_log.created_at DESC
+        LIMIT 10;
+    """
+    cursor.execute(query,(member_id,))
+    rows = cursor.fetchall()
+
+    records = []
+    for row in rows:
+        records.append({
+            "searcher_id": row["searcher_id"],
+            "searcher_name": row["searcher_name"],
+            "create_time": row["created_at"].strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+    return {
+        "success": True,
+        "data": records
+    }
