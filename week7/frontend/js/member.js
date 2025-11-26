@@ -19,7 +19,7 @@ const logoutBtn = document.querySelector("#logout_btn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     // 清除登入資訊
-    localStorage.removeItem("user_id");
+    localStorage.removeItem("member_id");
     localStorage.removeItem("name");
 
     location.href = "index.html";
@@ -49,7 +49,7 @@ if (searchForm) {
       const res = await fetch(`${API}/api/member/${memberId}?from=${myId}`);
       const data = await res.json();
 
-      if (!data.success) {
+      if (!data.data) {
         showError(idField, "查無此會員");
         idField.value = "";
         return;
@@ -88,24 +88,27 @@ if (updateForm) {
     }
 
     try {
-      const res = await fetch(`${API}/api/member/${memberId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName }),
-      });
+      const res = await fetch(
+        `${API}/api/member/${memberId}?from=${memberId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
 
       const data = await res.json();
 
-      if (data.success) {
+      if (data.ok) {
         updateEl.innerHTML = `<p class="mt-5">已更新</p>`;
         nameField.value = "";
-        localStorage.setItem("name", newName);
 
+        localStorage.setItem("name", newName);
         if (welcomeEl) {
           welcomeEl.innerText = `${newName}，歡迎登入系統`;
         }
       } else {
-        updateEl.innerHTML = `<p class="mt-5">${data.msg}</p>`;
+        updateEl.innerHTML = `<p class="mt-5">更新失敗</p>`;
         nameField.value = "";
       }
     } catch (err) {
@@ -129,14 +132,18 @@ if (queryLogBtn) {
       const res = await fetch(`${API}/api/query_log/${myId}`);
       const data = await res.json();
 
-      if (!data.success || data.data.length === 0) {
+      if (!data.data || data.data.length === 0) {
         logList.innerHTML = "<li>目前沒有任何查詢紀錄</li>";
         return;
       }
 
       logList.innerHTML = data.data
         .map(
-          (record) => `<li>${record.searcher_name} (${record.create_time})</li>`
+          (record) =>
+            `<li class="list-flex">
+              <p>${record.searcher_name} </p>
+              <p>(${record.created_at.replace("T", " ")})</p>
+            </li>`
         )
         .join("");
     } catch (err) {

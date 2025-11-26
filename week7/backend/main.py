@@ -40,44 +40,61 @@ def get_db():
 
 @app.post("/api/signup")
 def signup(
-    name: str = Form(),
-    email: str = Form(),
-    password: str = Form(),
+    body: dict = Body(...),
     db = Depends(get_db)
 ):
     con, cursor = db
+    name = body.get("name")
+    email = body.get("email")
+    password = body.get("password")
 
+    if not name or not email or not password:
+        return {"error": True}
+    
     query = "SELECT * FROM member WHERE email = %s"
     cursor.execute(query, (email,))
-    user = cursor.fetchone()
+    exists = cursor.fetchone()
 
-    if user:
-        return {"success": False, "msg": "重複的電子郵件"}
+    if exists:
+        return {"error": True, "msg": "重複的電子郵件"}
 
-    insert_query = "INSERT INTO member (name, email, password) VALUES (%s, %s, %s)"
-    cursor.execute(insert_query, (name, email, password))
-    con.commit()
-    return {"success": True}
+    try:
+        insert_query = "INSERT INTO member (name, email, password) VALUES (%s, %s, %s)"
+        cursor.execute(insert_query, (name, email, password))
+        con.commit()
+        return {"ok": True}
+    except:
+        return {"error": True}
+
+    
 
 @app.post("/api/login")
 def login(
-    email: str = Form(),
-    password: str = Form(),
+    body: dict = Body(...),
     db = Depends(get_db)
 ):
     con, cursor = db
+    email = body.get("email")
+    password = body.get("password")
+
+    if not email or not password:
+        return {"error": True}
 
     query = "SELECT id, name, password FROM member WHERE email = %s"
     cursor.execute(query, (email,))
     user = cursor.fetchone()
 
-    if not user or user["password"] != password:
-        return {"success": False, "msg": "帳號或密碼錯誤"}
+    if not user:
+        return {"data": None}
+
+    if user["password"] != password:
+        return {"error": True}
     
     return {
-        "success": True,
-        "member_id": user["id"],
-        "name": user["name"]
+        "data": {
+            "id": user["id"],
+            "name": user["name"]
+        }
     }
 
 @app.get("/api/member/{member_id}")
@@ -94,9 +111,9 @@ def get_member_info(
     user = cursor.fetchone()
 
     if not user:
-        return {"success": False, "msg": "無資料"}
+        return {"data": None}
 
-    if searcher_id and int(searcher_id) != member_id:
+    if searcher_id and str(searcher_id) != str(member_id):
         insert_query = """
             INSERT INTO query_log (target_id, searcher_id)
             VALUES (%s, %s)
@@ -104,35 +121,37 @@ def get_member_info(
         cursor.execute(insert_query, (member_id, searcher_id))
         con.commit()
     
-    return {
-        "success": True,
-        "data":{
-            "id": user["id"],
-            "name": user["name"],
-            "email": user["email"]
-        }
-    }
+    return {"data": user}
 
 @app.patch("/api/member/{member_id}")
 def update_username(
+    request: Request,
     member_id: int,
     body: dict = Body(...),
     db = Depends(get_db)
 ):
     con, cursor = db
+
+    login_user = request.query_params.get("from")
+    if not login_user or int(login_user) != member_id:
+        return {"error": True}
+
     new_name = body.get("name")
-
     if not new_name:
-        return {"success": False, "msg": "名稱不可為空"}
+        return {"error": True}
 
-    query = "UPDATE member SET name = %s WHERE id = %s;"
-    cursor.execute(query,(new_name, member_id))
-    con.commit()
+    try:
+        query = "UPDATE member SET name = %s WHERE id = %s;"
+        cursor.execute(query,(new_name, member_id))
+        con.commit()
 
-    if cursor.rowcount == 0:
-        return {"success": False, "msg": "更新失敗"}
+        if cursor.rowcount == 0:
+            return {"error": True}
     
-    return {"success": True, "msg": "更新成功"}
+        return {"ok": True}
+    
+    except:
+        return {"error": True}
 
 @app.get("/api/query_log/{member_id}")
 def get_query_log(
@@ -152,17 +171,6 @@ def get_query_log(
         LIMIT 10;
     """
     cursor.execute(query,(member_id,))
-    rows = cursor.fetchall()
+    records = cursor.fetchall()
 
-    records = []
-    for row in rows:
-        records.append({
-            "searcher_id": row["searcher_id"],
-            "searcher_name": row["searcher_name"],
-            "create_time": row["created_at"].strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-    return {
-        "success": True,
-        "data": records
-    }
+    return {"data": records}

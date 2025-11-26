@@ -42,18 +42,29 @@ if (signupForm) {
 
     if (hasError) return;
 
-    const formData = new FormData(signupForm);
+    const payload = {
+      name: nameField.value.trim(),
+      email: emailField.value.trim(),
+      password: pwdField.value.trim(),
+    };
+
     const res = await fetch(`${API}/api/signup`, {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
-    if (data.success) {
+    if (data.error) {
+      alert(data.msg || "註冊失敗");
+      signupForm.reset();
+      return;
+    }
+
+    if (data.ok) {
       alert("註冊成功");
       signupForm.reset();
-    } else {
-      alert(data.msg);
+      return;
     }
   });
 }
@@ -85,19 +96,31 @@ if (loginForm) {
 
     if (hasError) return;
 
-    const formData = new FormData(loginForm);
     const res = await fetch(`${API}/api/login`, {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: emailField.value.trim(),
+        password: pwdField.value.trim(),
+      }),
     });
 
     const data = await res.json();
-    if (data.success) {
-      localStorage.setItem("member_id", data.member_id);
-      localStorage.setItem("name", data.name);
-      location.href = "member.html";
-    } else {
-      alert(data.msg);
+    if (data.error) {
+      alert(data.msg || "登入失敗");
+      return;
     }
+    if (!data.data) {
+      alert("查無此帳號");
+      return;
+    }
+    if (!data.data.id || !data.data.name) {
+      alert("登入資料異常");
+      return;
+    }
+
+    localStorage.setItem("member_id", data.data.id);
+    localStorage.setItem("name", data.data.name);
+    location.href = "member.html";
   });
 }
