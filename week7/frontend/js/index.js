@@ -93,7 +93,7 @@ if (loginForm) {
 
     const data = await res.json();
     if (data.success) {
-      localStorage.setItem("user_id", data.user_id);
+      localStorage.setItem("member_id", data.member_id);
       localStorage.setItem("name", data.name);
       location.href = "member.html";
     } else {

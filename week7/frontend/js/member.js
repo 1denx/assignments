@@ -50,12 +50,65 @@ if (searchForm) {
 
       if (!data.success) {
         showError(idField, "查無此會員");
+        idField.value = "";
         return;
       }
 
       resultEl.innerHTML = `<p class="mt-5">${data.data.name} (${data.data.email})</p>`;
+      idField.value = "";
     } catch (err) {
       showError(idField, "查詢失敗，請稍後再試");
+      console.error(err);
+    }
+  });
+}
+
+// 更新 username
+const updateForm = document.querySelector("#form_update");
+const nameField = document.querySelector("#update_name");
+const updateEl = document.querySelector("#update_result");
+
+if (updateForm) {
+  updateForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearErrors();
+    updateEl.innerHTML = "";
+
+    const newName = nameField.value.trim();
+    if (!newName) {
+      showError(nameField, "名稱不可為空");
+      return;
+    }
+
+    const memberId = localStorage.getItem("member_id");
+    if (!memberId) {
+      location.href = "index.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/api/member/${memberId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        updateEl.innerHTML = `<p class="mt-5">已更新</p>`;
+        nameField.value = "";
+        localStorage.setItem("name", newName);
+
+        if (welcomeEl) {
+          welcomeEl.innerText = `${newName}，歡迎登入系統`;
+        }
+      } else {
+        updateEl.innerHTML = `<p class="mt-5">${data.msg}</p>`;
+        nameField.value = "";
+      }
+    } catch (err) {
+      showError(nameField, "更新失敗");
       console.error(err);
     }
   });

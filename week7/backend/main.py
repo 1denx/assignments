@@ -76,7 +76,7 @@ def login(
     
     return {
         "success": True,
-        "user_id": user["id"],
+        "member_id": user["id"],
         "name": user["name"]
     }
 
@@ -102,3 +102,24 @@ def get_member_info(
             "email": user["email"]
         }
     }
+
+@app.patch("/api/member/{member_id}")
+def update_username(
+    member_id: int,
+    body: dict = Body(...),
+    db = Depends(get_db)
+):
+    con, cursor = db
+    new_name = body.get("name")
+
+    if not new_name:
+        return {"success": False, "msg": "名稱不可為空"}
+
+    query = "UPDATE member SET name = %s WHERE id = %s;"
+    cursor.execute(query,(new_name, member_id))
+    con.commit()
+
+    if cursor.rowcount == 0:
+        return {"success": False, "msg": "更新失敗"}
+    
+    return {"success": True, "msg": "更新成功"}
