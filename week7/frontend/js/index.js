@@ -1,21 +1,6 @@
+import { showError, clearErrors } from "./utils.js";
+
 const API = "http://127.0.0.1:8000";
-
-const showError = (field, errorText) => {
-  field.classList.add("error");
-  const errorEl = document.createElement("small");
-  errorEl.classList.add("error-text");
-  errorEl.innerText = errorText;
-  field.parentElement.appendChild(errorEl);
-};
-
-const clearErrors = () => {
-  document
-    .querySelectorAll(".error")
-    .forEach((field) => field.classList.remove("error"));
-  document
-    .querySelectorAll(".error-text")
-    .forEach((errorText) => errorText.remove());
-};
 
 const emailRegex = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 

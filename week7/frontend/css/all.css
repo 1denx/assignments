@@ -131,6 +131,9 @@ input{
 .mt-30{
     margin-top: 30px;
 }
+.mt-5{
+  margin-top: 5px;
+}
 .mb-5{
     margin-bottom: 5px;
 }
@@ -237,13 +240,18 @@ input{
     color: #fff;
 }
 
+.form-group {
+  position: relative;
+}
+
 .form-group .error {
   border: 1px solid var(--red-color);
 }
 
 .error-text {
+  position: absolute;
+  left: 0;
+  top: 30px;
   color: var(--red-color);
   font-size: 0.8rem;
-  margin-top: 4px;
-  display: block;
 }

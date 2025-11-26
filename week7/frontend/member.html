@@ -18,18 +18,20 @@
       <div class="line mt-30"></div>
       <div class="mt-30">
         <h2>查詢會員姓名</h2>
-        <form action="" method="post" class="msg-flex mt-20" id="form_msg">
-          <label for="content"></label>
-          <input
-            class="m-5"
-            type="text"
-            id="content"
-            name="content"
-            placeholder="請輸入會員姓名"
-          />
+        <form class="msg-flex mt-20" id="form_search">
+          <div class="form-group">
+            <label for="content"></label>
+            <input
+              class="m-5"
+              type="number"
+              id="search_id"
+              placeholder="請輸入會員 ID"
+            />
+          </div>
 
-          <button type="submit" class="btn-sm">查詢</button>
+          <button type="submit" class="btn-sm" id="search_btn">查詢</button>
         </form>
+        <p id="search_result"></p>
       </div>
       <div class="mt-30">
         <h2>更新我的姓名</h2>
@@ -51,6 +53,6 @@
         <button type="button" class="btn-sm">更新</button>
       </div>
     </main>
-    <script src="js/member.js"></script>
+    <script type="module" src="js/member.js"></script>
   </body>
 </html>

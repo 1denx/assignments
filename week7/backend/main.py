@@ -79,3 +79,26 @@ def login(
         "user_id": user["id"],
         "name": user["name"]
     }
+
+@app.get("/api/member/{member_id}")
+def get_member_info(
+    member_id: int,
+    db = Depends(get_db)
+):
+    con, cursor = db
+
+    query = "SELECT id, name, email FROM member WHERE id = %s;"
+    cursor.execute(query, (member_id,))
+    user = cursor.fetchone()
+
+    if not user:
+        return {"success": False, "msg": "無資料"}
+    
+    return {
+        "success": True,
+        "data":{
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"]
+        }
+    }
