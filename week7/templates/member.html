@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/frontend/css/all.css" />
+    <link rel="stylesheet" href="/static/all.css" />
     <title>會員頁面</title>
   </head>
   <body>
@@ -12,7 +12,9 @@
     </header>
     <main class="auto-layout flex">
       <div class="flex">
-        <h2 class="mb-20" id="welcome_user"></h2>
+        <h2 class="mb-20" id="welcome_user" data-name="{{username}}">
+          {{username}}，歡迎登入系統
+        </h2>
         <button type="button" class="btn" id="logout_btn">登出系統</button>
       </div>
       <div class="line mt-30"></div>
@@ -54,8 +56,8 @@
         <h2>誰查詢了我</h2>
         <button type="button" class="btn-sm" id="query_log_btn">更新</button>
       </div>
-      <ul id="query_log_list" class="mt-20"></ul>
+      <ul id="query_log_list" class="mt-20 mb-30"></ul>
     </main>
-    <script type="module" src="js/member.js"></script>
+    <script type="module" src="/static/js/member.js"></script>
   </body>
 </html>

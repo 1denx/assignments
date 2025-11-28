@@ -27,9 +27,6 @@ body {
 	line-height: 1;
   background-color: #fff;
 }
-body.homepage {
-  background-color: #f5f5f5; /* 首頁灰色 */
-}
 
 ol, ul {
 	list-style: none;
@@ -88,6 +85,10 @@ header{
   color: #fff;
 }
 
+.homepage {
+  background-color: #f5f5f5; /* 首頁灰色 */
+}
+
 .center-layout {
   max-width: 100%;
   height: calc(100vh - 120px);
@@ -98,7 +99,6 @@ header{
 }
 
 .auto-layout {
-  min-height: calc(100vh - 120px); /* 保底高度 */
   padding-top: 20px;
 }
 
@@ -157,7 +157,7 @@ input{
 .flex{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
 
@@ -165,6 +165,7 @@ input{
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     gap: 20px;
 }
@@ -193,10 +194,6 @@ input{
   justify-content: center;
   align-items: center;
   gap: 10px;
-}
-
-.flex .btn{
-  margin-top: auto;
 }
 
 .btn{
