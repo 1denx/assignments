@@ -136,7 +136,9 @@ if (queryLogBtn) {
     if (!myId) return;
 
     try {
-      const res = await fetch(`${API}/api/member/${myId}/query_log`);
+      const res = await fetch(
+        `${API}/api/member/${myId}/query_log?from=${myId}`
+      );
       const data = await res.json();
 
       if (!data.data || data.data.length === 0) {

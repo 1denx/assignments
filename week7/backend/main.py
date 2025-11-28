@@ -132,8 +132,8 @@ def update_username(
 ):
     con, cursor = db
 
-    login_user = request.query_params.get("from")
-    if not login_user or int(login_user) != member_id:
+    login_id = request.query_params.get("from")
+    if not login_id or int(login_id) != member_id:
         return {"error": True}
 
     new_name = body.get("name")
@@ -155,10 +155,17 @@ def update_username(
 
 @app.get("/api/member/{member_id}/query_log")
 def get_query_log(
+    request: Request,
     member_id: int,
     db = Depends(get_db)
 ):
     con, cursor = db
+
+    login_id = request.query_params.get("from")
+
+    if not login_id or int(login_id) != member_id:
+        return {"error": "不允許查看別人的紀錄"}
+        
     query = """
         SELECT
             query_log.searcher_id,
@@ -167,10 +174,11 @@ def get_query_log(
         FROM query_log
         INNER JOIN member ON query_log.searcher_id = member.id
         WHERE query_log.target_id = %s
+            AND query_log.searcher_id <> %s
         ORDER BY query_log.created_at DESC
         LIMIT 10;
     """
-    cursor.execute(query,(member_id,))
+    cursor.execute(query,(member_id, member_id))
     records = cursor.fetchall()
 
     return {"data": records}
