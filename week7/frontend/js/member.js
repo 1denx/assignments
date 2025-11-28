@@ -26,6 +26,19 @@ if (logoutBtn) {
   });
 }
 
+// 取得會員資料
+async function loadMember(memberId, fromId) {
+  try {
+    const res = await fetch(`${API}/api/member/${memberId}?from=${fromId}`);
+    const data = await res.json();
+    console.log("會員資料", data);
+    return data;
+  } catch (err) {
+    console.error("取得會員資料失敗", err);
+    return null;
+  }
+}
+
 // 顯示查詢會員 ID
 const searchForm = document.querySelector("#form_search");
 const idField = document.querySelector("#search_id");
@@ -45,22 +58,16 @@ if (searchForm) {
       return;
     }
 
-    try {
-      const res = await fetch(`${API}/api/member/${memberId}?from=${myId}`);
-      const data = await res.json();
+    const data = await loadMember(memberId, myId);
 
-      if (!data.data) {
-        showError(idField, "查無此會員");
-        idField.value = "";
-        return;
-      }
-
-      resultEl.innerHTML = `<p class="mt-5">${data.data.name} (${data.data.email})</p>`;
+    if (!data.data) {
+      showError(idField, "查無此會員");
       idField.value = "";
-    } catch (err) {
-      showError(idField, "查詢失敗，請稍後再試");
-      console.error(err);
+      return;
     }
+
+    resultEl.innerHTML = `<p class="mt-5">${data.data.name} (${data.data.email})</p>`;
+    idField.value = "";
   });
 }
 
@@ -89,7 +96,7 @@ if (updateForm) {
 
     try {
       const res = await fetch(
-        `${API}/api/member/${memberId}?from=${memberId}`,
+        `${API}/api/member?member_id=${memberId}&from=${memberId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -129,7 +136,7 @@ if (queryLogBtn) {
     if (!myId) return;
 
     try {
-      const res = await fetch(`${API}/api/query_log/${myId}`);
+      const res = await fetch(`${API}/api/member/${myId}/query_log`);
       const data = await res.json();
 
       if (!data.data || data.data.length === 0) {

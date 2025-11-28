@@ -1,7 +1,7 @@
 import os
 import mysql.connector
 from dotenv import load_dotenv, find_dotenv
-from fastapi import FastAPI, Form, Depends, Body, Request
+from fastapi import FastAPI, Form, Depends, Body, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 # 載入 .env 變數
@@ -123,10 +123,10 @@ def get_member_info(
     
     return {"data": user}
 
-@app.patch("/api/member/{member_id}")
+@app.patch("/api/member")
 def update_username(
     request: Request,
-    member_id: int,
+    member_id: int = Query(...),
     body: dict = Body(...),
     db = Depends(get_db)
 ):
@@ -153,7 +153,7 @@ def update_username(
     except:
         return {"error": True}
 
-@app.get("/api/query_log/{member_id}")
+@app.get("/api/member/{member_id}/query_log")
 def get_query_log(
     member_id: int,
     db = Depends(get_db)
