@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/all.css" />
+    <title>註冊 / 登入</title>
+  </head>
+  <body class="homepage">
+    <header>
+      <h1>歡迎光臨，請註冊登入系統</h1>
+    </header>
+    <main class="center-layout">
+      <div class="wrap">
+        <h2>註冊帳號</h2>
+        <form
+          action="/signup"
+          id="signup_form"
+          class="form-flex mt-20"
+          method="post"
+        >
+          <div class="form-group">
+            <label for="name"></label>
+            <input
+              class="m-5"
+              type="text"
+              id="signup_name"
+              name="name"
+              placeholder="姓名"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email"></label>
+            <input
+              class="m-5"
+              type="email"
+              id="signup_email"
+              name="email"
+              placeholder="信箱"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password"></label>
+            <input
+              type="password"
+              id="signup_pwd"
+              name="password"
+              placeholder="密碼"
+            />
+          </div>
+
+          <button type="submit" class="btn full">註冊</button>
+        </form>
+      </div>
+      <div class="wrap">
+        <h2>登入系統</h2>
+        <form
+          action="/login"
+          id="login_form"
+          class="form-flex mt-20"
+          method="post"
+        >
+          <div class="form-group">
+            <label for="email"></label>
+            <input
+              class="m-5"
+              type="email"
+              id="login_email"
+              name="email"
+              placeholder="信箱"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password"></label>
+            <input
+              type="password"
+              id="login_pwd"
+              name="password"
+              placeholder="密碼"
+            />
+          </div>
+
+          <button type="submit" class="btn full">登入</button>
+        </form>
+      </div>
+    </main>
+    <script type="module" src="/static/js/index.js"></script>
+  </body>
+</html>

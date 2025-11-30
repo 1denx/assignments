@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/all.css" />
+    <title>會員頁面</title>
+  </head>
+  <body>
+    <header class="mb-30">
+      <h1>歡迎光臨，這是會員頁</h1>
+    </header>
+    <main class="auto-layout flex">
+      <div class="flex">
+        <h2 class="mb-20" id="welcome_user" data-name="{{username}}">
+          {{username}}，歡迎登入系統
+        </h2>
+        <button type="button" class="btn" id="logout_btn">登出系統</button>
+      </div>
+      <div class="line mt-30"></div>
+      <div class="mt-30">
+        <h2>查詢會員姓名</h2>
+        <form class="msg-flex mt-20" id="form_search">
+          <div class="form-group">
+            <label for="search_id"></label>
+            <input
+              class="m-5"
+              type="number"
+              id="search_id"
+              placeholder="請輸入會員 ID"
+            />
+          </div>
+
+          <button type="submit" class="btn-sm" id="search_btn">查詢</button>
+        </form>
+        <p id="search_result"></p>
+      </div>
+      <div class="mt-30">
+        <h2>更新我的姓名</h2>
+        <form class="msg-flex mt-20" id="form_update">
+          <div class="form-group">
+            <label for="update_name"></label>
+            <input
+              class="m-5"
+              type="text"
+              id="update_name"
+              placeholder="請輸入新的名稱"
+            />
+          </div>
+
+          <button type="submit" class="btn-sm">更新</button>
+        </form>
+        <p id="update_result"></p>
+      </div>
+      <div class="mt-30 flex-row">
+        <h2>誰查詢了我</h2>
+        <button type="button" class="btn-sm" id="query_log_btn">更新</button>
+      </div>
+      <ul id="query_log_list" class="mt-20 mb-30"></ul>
+    </main>
+    <script type="module" src="/static/js/member.js"></script>
+  </body>
+</html>

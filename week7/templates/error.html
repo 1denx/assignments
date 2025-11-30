@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block title %} ERROR PAGE {% endblock %} {% block
+content %}
+
+<header>
+  <h1>失敗頁面</h1>
+</header>
+<main class="center-layout">
+  <div class="flex">
+    {% if msg == "請輸入信箱和密碼" %}
+    <h2>{{msg}}</h2>
+    {% elif msg == "信箱或密碼輸入錯誤" %}
+    <h2>{{msg}}</h2>
+    {% else %}
+    <h2>{{msg}}</h2>
+    {% endif %}
+    <button type="button" class="btn mt-20" onclick="window.location.href='/';">
+      返回首頁
+    </button>
+  </div>
+</main>
+<script type="module" src="/static/js/member.js"></script>
+{% endblock %}
