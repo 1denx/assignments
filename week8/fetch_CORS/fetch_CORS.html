@@ -3,10 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fetch and CORS</title>
+    <title>Fetch and CORS 測試</title>
   </head>
   <body>
+    <h1>Fetch CORS 測試頁面</h1>
+
+    <button type="button" id="btn">呼叫 API</button>
+
+    <pre id="output"></pre>
+
     <script>
+      // fetch API
       const apiGoogle = "https://google.com";
       const data = {
         name: "Eden",
@@ -32,6 +39,22 @@
         .then((response) => response.text())
         .then((data) => console.log(data))
         .catch((error) => console.error("Error:", error));
+
+      // 呼叫 CORS API
+      document.getElementById("btn").addEventListener("click", () => {
+        fetch("http://localhost:8000/hello")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("output").textContent = JSON.stringify(
+              data,
+              null,
+              2
+            );
+          })
+          .catch((err) => {
+            document.getElementById("output").textContent = err;
+          });
+      });
     </script>
   </body>
 </html>
