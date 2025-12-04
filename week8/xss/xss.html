@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS practice</title>
+  </head>
+  <body>
+    <input type="text" id="name" />
+    <button onclick="test()" id="name-submit">Submit</button>
+    <div id="output"></div>
+    <div>
+      <p>複製下列內容到輸入框做測試</p>
+      <p>
+        &lt;img src="" style="display: none" onerror="alert(`這是 XSS 攻擊
+        ( つ’-’)╮—̳͟͞͞♥`)" /&gt;
+      </p>
+    </div>
+    <script>
+      function test() {
+        let name = document.getElementById("name").value;
+        let submit = document.getElementById("name-submit");
+        let answer = document.getElementById("output");
+        answer.innerHTML = name;
+      }
+    </script>
+  </body>
+</html>
