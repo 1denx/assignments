@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch and CORS</title>
+  </head>
+  <body>
+    <script>
+      const apiGoogle = "https://google.com";
+      const data = {
+        name: "Eden",
+      };
+      const request = fetch(apiGoogle, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        mode: "no-cors", // 就算無法存取，也不要跑到 .catch() 那邊，讓它出現 Error
+      });
+      request
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .catch((error) => console.log("Error:", error))
+        .then((response) => console.log("Success", response));
+
+      const apiAssignment = "https://cwpeng.github.io/test/assignment-3-1";
+      const req = fetch(apiAssignment)
+        .then((response) => response.text())
+        .then((data) => console.log(data))
+        .catch((error) => console.error("Error:", error));
+    </script>
+  </body>
+</html>
