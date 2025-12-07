@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="all.css" />
+    <title>Defer 範例</title>
+  </head>
+  <body>
+    <div class="demo-container">
+      <h1>Defer 屬性範例</h1>
+      <p>
+        定義: 標記為 defer 的腳本會非同步下載，但會延遲到 HTML
+        文件完全解析完成後（但在觸發
+        <code>DOMContentLoaded</code> 事件之前）才依序執行。
+      </p>
+      <img src="defer.png" alt="defer 載入圖示" />
+      <h3>執行順序：</h3>
+      <ul>
+        <li>HTML 解析和 JS 下載同時進行。</li>
+        <li>JS 下載完成後不會立即執行，而是等待 HTML 解析完成。</li>
+        <li>所有 defer 腳本會按照它們在 HTML 中出現的順序依序執行。</li>
+      </ul>
+      <p>
+        使用場景：適用於需要操作或依賴 DOM 結構（例如
+        <code>$ document.getElementById() $</code
+        >）的腳本，並且有前後依賴關係的多個腳本。它能確保在腳本執行時 DOM
+        已經準備好。
+      </p>
+      <h3>請開啟瀏覽器的 Console 觀察輸出順序。</h3>
+      <p>
+        --- 內嵌腳本執行 (阻塞) --- <br />
+        3. 內嵌腳本執行：HTML 解析完成後<br />
+        1. Defer A: 按照出現順序執行 (先)<br />
+        2. Defer B: 按照出現順序執行 (後)
+      </p>
+    </div>
+    <script>
+      // 內嵌腳本：在解析到這裡時會執行，阻塞後續 DOM 解析
+      console.log("--- 內嵌腳本執行 (阻塞) ---");
+    </script>
+
+    <script defer src="defer_a.js"></script>
+    <script defer src="defer_b.js"></script>
+
+    <script>
+      console.log("3. 內嵌腳本執行：HTML 解析完成後");
+    </script>
+  </body>
+</html>

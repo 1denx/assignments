@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="all.css" />
+    <title>Async 範例</title>
+  </head>
+  <body>
+    <div class="demo-container">
+      <h1>Async 屬性範例</h1>
+      <p>定義: 標記為 async 的腳本會非同步下載，並且在下載完成後立即執行。</p>
+      <img src="async.png" alt="async 載入圖示" />
+      <h3>執行順序：</h3>
+      <ul>
+        <li>HTML 解析（Parser）和 JS 下載同時進行。</li>
+        <li>JS 下載完成後，HTML 解析會暫停，JS 立即執行。</li>
+        <li>JS 執行完畢後，HTML 解析繼續。</li>
+        <li>不保證多個 async 腳本之間的執行順序。</li>
+      </ul>
+      <h3>請開啟瀏覽器的 Console 觀察輸出順序。</h3>
+      <p>
+        3. 內嵌腳本執行：HTML 解析完成後<br />
+        2. Async B: 下載完成並執行 (立即)<br />
+        1. Async A: 下載完成並執行 (延遲)
+      </p>
+    </div>
+
+    <script async src="async_a.js"></script>
+    <script async src="async_b.js"></script>
+
+    <script>
+      console.log("3. 內嵌腳本執行：HTML 解析完成後");
+    </script>
+  </body>
+</html>
