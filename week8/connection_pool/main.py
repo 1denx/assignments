@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from db import get_db_conn, pool
+import time
 
 app = FastAPI()
 
